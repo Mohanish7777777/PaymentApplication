@@ -50,4 +50,4 @@ app.register_blueprint(ticket_bp)
 app.register_blueprint(user_bp)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=8000)
