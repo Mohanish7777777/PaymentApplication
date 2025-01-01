@@ -7,4 +7,5 @@ pymongo==4.5.0
 dnspython==2.4.2
 Werkzeug==2.3.7
 qrcode==7.4.2
+flask_session
 Pillow==10.0.1
