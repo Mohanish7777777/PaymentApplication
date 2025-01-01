@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Make Payment</h2>
+    {% if not payment %}
+    <div class="alert alert-danger">
+        Invalid payment request. Please check the payment ID and try again.
+    </div>
+    {% else %}
+    <div class="card">
+        <div class="card-header">
+            <h4>Payment Details</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>Amount:</strong> ₹{{ payment.amount }}</p>
+            <p><strong>Due Date:</strong> {{ payment.due_date.strftime('%Y-%m-%d') }}</p>
+            
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Scan QR Code</h5>
+                        </div>
+                        <div class="card-body text-center">
+                            <img src="data:image/png;base64,{{ qr_code }}" alt="UPI QR Code" class="img-fluid mb-3">
+                            <p>Scan this QR code using any UPI app to make payment</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Pay via UPI ID</h5>
+                        </div>
+                        <div class="card-body">
+                            <p>You can also make payment using the following UPI ID:</p>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" value="{{ upi_id }}" id="upiId" readonly>
+                                <button class="btn btn-outline-secondary" type="button" onclick="copyUpiId()">Copy</button>
+                            </div>
+                            <p>Open your UPI app and enter this ID to make payment</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <p class="text-danger">Payment expires at: {{ expiration_time.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                
+                {% if payment.status == 'pending' %}
+                <form method="POST">
+                    <button type="submit" class="btn btn-success">
+                        I've Completed the Payment
+                    </button>
+                </form>
+                {% endif %}
+                
+                <a href="{{ url_for('payment.payment_status') }}" class="btn btn-secondary mt-2">
+                    Back to Payments
+                </a>
+            </div>
+
+            <div class="timer mb-4">
+                <h4>Time remaining: <span id="timer"></span></h4>
+            </div>
+
+            <script>
+            // Timer countdown
+            const expiration = new Date("{{ expiration_time.isoformat() }}").getTime();
+            const timerElement = document.getElementById('timer');
+
+            function updateTimer() {
+                const now = new Date().getTime();
+                const distance = expiration - now;
+                
+                if (distance < 0) {
+                    clearInterval(timer);
+                    timerElement.textContent = '00:00';
+                    window.location.reload();
+                    return;
+                }
+
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+
+            const timer = setInterval(updateTimer, 1000);
+            updateTimer();
+
+            // Check payment status every 5 seconds
+            setInterval(function() {
+                fetch('/check-payment-status/{{ payment._id }}')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'paid') {
+                            clearInterval(timer);
+                            window.location.href = '/payment-success';
+                        }
+                    });
+            }, 5000);
+            </script>
+        </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+function copyUpiId() {
+    const upiId = document.getElementById('upiId');
+    upiId.select();
+    document.execCommand('copy');
+    alert('UPI ID copied to clipboard');
+}
+</script>
+{% endblock %}

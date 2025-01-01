@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Plans - Payment Manager{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Manage Plans</h2>
+        
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Price (INR)</th>
+                        <th>Description</th>
+                        <th>Renewal Period (Days)</th>
+                        <th>Created At</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for plan in plans %}
+                    <tr>
+                        <td>{{ plan.name }}</td>
+                        <td>{{ plan.price }}</td>
+                        <td>{{ plan.description }}</td>
+                        <td>{{ plan.renewal_period }}</td>
+                        <td>{{ plan.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            <a href="#" class="btn btn-sm btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <a href="{{ url_for('admin.create_plan') }}" class="btn btn-primary mt-3">
+            <i class="bi bi-plus"></i> Create New Plan
+        </a>
+    </div>
+</div>
+{% endblock %}

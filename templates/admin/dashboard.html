@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Payment Manager{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Admin Dashboard</h2>
+        
+        
+        <div class="row mt-4">
+            <div class="col-md-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Users</h5>
+                        <p class="card-text">{{ total_users }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Payments</h5>
+                        <p class="card-text">{{ total_payments }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-warning">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Tickets</h5>
+                        <p class="card-text">{{ total_tickets }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Quick Actions</h5>
+                    </div>
+                    <div class="card-body">
+                        <a href="{{ url_for('admin.manage_users') }}" class="btn btn-primary mb-2">
+                            <i class="bi bi-people"></i> Manage Users
+                        </a>
+                        <a href="{{ url_for('admin.manage_payments') }}" class="btn btn-success mb-2">
+                            <i class="bi bi-cash"></i> Manage Payments
+                        </a>
+                        <a href="{{ url_for('admin.manage_tickets') }}" class="btn btn-warning mb-2">
+                            <i class="bi bi-ticket"></i> Manage Tickets
+                        </a>
+                        <a href="{{ url_for('admin.manage_coupons') }}" class="btn btn-info mb-2">
+                            <i class="bi bi-percent"></i> Manage Coupons
+                        </a>
+                        <a href="{{ url_for('admin.create_plan') }}" class="btn btn-secondary mb-2">
+                            <i class="bi bi-plus"></i> Create Plan
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

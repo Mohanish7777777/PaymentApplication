@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Ticket Status - Payment Manager{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>My Tickets</h2>
+    
+    {% for ticket in tickets %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>{{ ticket.subject }}</h5>
+            <small class="text-muted">
+                Status: 
+                {% if ticket.status == 'open' %}
+                    <span class="badge bg-warning">Open</span>
+                {% elif ticket.status == 'waiting' %}
+                    <span class="badge bg-info">Waiting</span>
+                {% else %}
+                    <span class="badge bg-success">Closed</span>
+                {% endif %}
+                | Created: {{ ticket.created_at.strftime('%Y-%m-%d %H:%M') }}
+            </small>
+        </div>
+        <div class="card-body">
+            <p>{{ ticket.description }}</p>
+            
+            <h6>Conversation</h6>
+            <div style="max-height: 300px; overflow-y: auto; border: 1px solid #dee2e6; padding: 10px; border-radius: 5px;">
+                {% if ticket.replies %}
+                    {% for reply in ticket.replies %}
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <p>{{ reply.message }}</p>
+                            <small class="text-muted">
+                                {{ reply.created_at.strftime('%Y-%m-%d %H:%M') }}
+                                {% if reply.is_admin %}
+                                    (Admin)
+                                {% else %}
+                                    (You)
+                                {% endif %}
+                            </small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No replies yet</p>
+                {% endif %}
+            </div>
+            
+            {% if ticket.status != 'closed' %}
+            <form method="POST" class="mt-4">
+                <input type="hidden" name="ticket_id" value="{{ ticket._id }}">
+                <div class="mb-3">
+                    <label for="replyMessage{{ loop.index }}" class="form-label">
+                        Add Reply
+                    </label>
+                    <textarea class="form-control" id="replyMessage{{ loop.index }}" 
+                              name="message" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    Submit Reply
+                </button>
+            </form>
+            {% else %}
+            <div class="alert alert-info mt-4">
+                This ticket is closed. No further replies can be added.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

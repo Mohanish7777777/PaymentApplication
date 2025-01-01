@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Create Plan - Payment Manager{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <h2>Create New Plan</h2>
+        
+        <form method="POST">
+            <div class="mb-3">
+                <label for="name" class="form-label">Plan Name</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="price" class="form-label">Price</label>
+                <input type="number" step="0.01" class="form-control" id="price" name="price" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+            </div>
+            
+            <div class="mb-3">
+                <label for="renewal_period" class="form-label">Renewal Period (days)</label>
+                <input type="number" class="form-control" id="renewal_period" name="renewal_period" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Create Plan</button>
+            <a href="{{ url_for('admin.manage_plans') }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

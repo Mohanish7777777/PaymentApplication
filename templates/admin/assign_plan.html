@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Assign Plan - Payment Manager{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <h2>Assign Plan to {{ user.username }}</h2>
+        
+        <form method="POST">
+            <div class="mb-3">
+                <label for="plan_id" class="form-label">Select Plan</label>
+                <select class="form-select" id="plan_id" name="plan_id">
+                    <option value="">No Plan</option>
+                    {% for plan in plans %}
+                    <option value="{{ plan._id }}" {% if user.plan_id and plan._id == user.plan_id %}selected{% endif %}>
+                        {{ plan.name }} - ₹{{ plan.price }} ({{ plan.renewal_period }} days)
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Assign Plan</button>
+            <a href="{{ url_for('admin.manage_users') }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

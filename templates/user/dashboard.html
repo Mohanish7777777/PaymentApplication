@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Payment Manager{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h2>Welcome, {{ current_user.username }}</h2>
+        
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <h3>Your Plans</h3>
+                {% if user_plans %}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Plan Name</th>
+                                    <th>Price</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user_plan in user_plans %}
+                                <tr>
+                                    <td>{{ user_plan.plan.name }}</td>
+                                    <td>${{ user_plan.plan.price }}</td>
+                                    <td>
+                                        {% if user_plan.paid %}
+                                            <span class="badge bg-success">Paid</span>
+                                        {% else %}
+                                            <span class="badge bg-warning">Payment Due</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if not user_plan.paid %}
+                                        <a href="{{ url_for('payment.make_payment', plan_id=user_plan.plan._id) }}" 
+                                           class="btn btn-sm btn-primary">Pay Now</a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">You are not enrolled in any plans yet.</div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Payment Summary</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card bg-success text-white">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Total Paid</h5>
+                                        <p class="card-text">${{ total_paid }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card bg-warning">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Total Pending</h5>
+                                        <p class="card-text">${{ total_pending }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Quick Actions</h5>
+                    </div>
+                    <div class="card-body">
+                        <a href="{{ url_for('payment.make_payment') }}" class="btn btn-primary mb-2">
+                            <i class="bi bi-credit-card"></i> Make Payment
+                        </a>
+                        <a href="{{ url_for('ticket.create_ticket') }}" class="btn btn-secondary mb-2">
+                            <i class="bi bi-ticket"></i> Create Ticket
+                        </a>
+                        <a href="{{ url_for('user.transactions') }}" class="btn btn-success mb-2">
+                            <i class="bi bi-receipt"></i> Transaction History
+                        </a>
+                        <a href="{{ url_for('user.profile') }}" class="btn btn-info mb-2">
+                            <i class="bi bi-person"></i> View Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

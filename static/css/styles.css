@@ -1,0 +1,60 @@
+/* Custom styles for Payment Manager */
+
+/* Navbar styling */
+.navbar {
+    margin-bottom: 20px;
+}
+
+/* Card styling */
+.card {
+    margin-bottom: 20px;
+}
+
+/* Table styling */
+.table-responsive {
+    margin-bottom: 20px;
+}
+
+/* Badge styling */
+.badge {
+    padding: 0.5em 0.75em;
+}
+
+/* Button spacing */
+.btn {
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+/* Alert styling */
+.alert {
+    margin-top: 20px;
+}
+
+/* Dashboard cards */
+.dashboard-card {
+    min-height: 120px;
+}
+
+/* Payment status colors */
+.payment-status-paid {
+    color: green;
+}
+
+.payment-status-pending {
+    color: orange;
+}
+
+/* Ticket status colors */
+.ticket-status-open {
+    color: orange;
+}
+
+.ticket-status-closed {
+    color: green;
+}
+
+/* Form styling */
+.form-group {
+    margin-bottom: 1rem;
+}

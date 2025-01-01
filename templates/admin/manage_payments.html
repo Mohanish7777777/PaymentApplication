@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Payments - Payment Manager{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Manage Payments</h2>
+        
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Due Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if pending_payments %}
+                        {% for payment in pending_payments %}
+                        <tr>
+                            <td>{{ payment.user_id }}</td>
+                            <td>${{ payment.amount }}</td>
+                            <td>
+                                {% if payment.status == 'paid' %}
+                                    <span class="badge bg-success">Paid</span>
+                                {% else %}
+                                    <span class="badge bg-warning">Pending</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if payment.due_date < now %}
+                                    <span class="due-date-red">{{ payment.due_date.strftime('%Y-%m-%d') }}</span>
+                                {% else %}
+                                    {{ payment.due_date.strftime('%Y-%m-%d') }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group">
+                                    <a href="{{ url_for('admin.update_payment_status', payment_id=payment._id, status='paid') }}" 
+                                       class="btn btn-sm btn-success">Mark Paid</a>
+                                    <a href="{{ url_for('admin.update_payment_status', payment_id=payment._id, status='cancelled') }}" 
+                                       class="btn btn-sm btn-danger">Mark Cancelled</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center">No pending payments found</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Transaction History</h3>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Paid Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if transaction_history %}
+                        {% for payment in transaction_history %}
+                        <tr>
+                            <td>{{ payment.user_id }}</td>
+                            <td>${{ payment.amount }}</td>
+                            <td>
+                                <span class="badge bg-success">Paid</span>
+                            </td>
+                            <td>
+                                {{ payment.paid_at.strftime('%Y-%m-%d') if payment.paid_at else 'N/A' }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center">No transaction history found</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

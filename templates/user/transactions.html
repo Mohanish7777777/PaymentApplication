@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Transaction History - Payment Manager{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Transaction History</h2>
+    
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Plan</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in transactions %}
+                <tr>
+                    <td>{{ transaction.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>₹{{ transaction.amount }}</td>
+                    <td>{{ transaction.plan_id }}</td>
+                    <td>
+                        <span class="badge bg-success">Paid</span>
+                        <button class="btn btn-sm btn-outline-primary ms-2" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#billModal"
+                                onclick="window.location.href='{{ url_for('user.view_bill', transaction_id=transaction._id) }}'">
+                            Bill Details
+                        </button>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="text-center">No transactions found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

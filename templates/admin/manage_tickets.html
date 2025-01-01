@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Tickets - Payment Manager{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Manage Tickets</h2>
+        
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Subject</th>
+                        <th>Status</th>
+                        <th>Created At</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ticket in tickets %}
+                    <tr>
+                        <td>{{ ticket.user_id }}</td>
+                        <td>{{ ticket.subject }}</td>
+                        <td>
+                            {% if ticket.status == 'open' %}
+                                <span class="badge bg-warning">Open</span>
+                            {% else %}
+                                <span class="badge bg-success">Closed</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ ticket.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal" 
+                                    data-bs-target="#ticketModal{{ loop.index }}">
+                                Manage
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- Ticket Management Modal -->
+                    <div class="modal fade" id="ticketModal{{ loop.index }}" tabindex="-1">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Manage Ticket</h5>
+                                    <button type="button" class="btn-close" 
+                                            data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <h6>Ticket Details</h6>
+                                    <p><strong>Subject:</strong> {{ ticket.subject }}</p>
+                                    <p><strong>Description:</strong> {{ ticket.description }}</p>
+                                    
+                                    <h6 class="mt-4">Replies</h6>
+                                    {% if ticket.replies %}
+                                        {% for reply in ticket.replies %}
+                                        <div class="card mb-2">
+                                            <div class="card-body">
+                                                <p>{{ reply.message }}</p>
+                                                <small class="text-muted">
+                                                    {{ reply.created_at.strftime('%Y-%m-%d %H:%M:%S') }}
+                                                    {% if reply.is_admin %}
+                                                        (Admin)
+                                                    {% endif %}
+                                                </small>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        <p>No replies yet</p>
+                                    {% endif %}
+                                    
+                                    <form method="POST" class="mt-4">
+                                        <input type="hidden" name="ticket_id" value="{{ ticket._id }}">
+                                        <input type="hidden" name="action" value="reply">
+                                        <div class="mb-3">
+                                            <label for="replyMessage{{ loop.index }}" class="form-label">
+                                                Add Reply
+                                            </label>
+                                            <textarea class="form-control" id="replyMessage{{ loop.index }}" 
+                                                      name="message" rows="3" required></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">
+                                            Submit Reply
+                                        </button>
+                                    </form>
+                                    
+                                    <form method="POST" class="mt-4">
+                                        <input type="hidden" name="ticket_id" value="{{ ticket._id }}">
+                                        <input type="hidden" name="action" value="update_status">
+                                        <div class="mb-3">
+                                            <label class="form-label">Update Status</label>
+                                            <select class="form-select" name="status">
+                                                <option value="open" {% if ticket.status == 'open' %}selected{% endif %}>
+                                                    Open
+                                                </option>
+                                                <option value="waiting" {% if ticket.status == 'waiting' %}selected{% endif %}>
+                                                    Waiting
+                                                </option>
+                                                <option value="closed" {% if ticket.status == 'closed' %}selected{% endif %}>
+                                                    Closed
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-warning">
+                                            Update Status
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

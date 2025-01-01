@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Coupons - Payment Manager{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Manage Coupons</h2>
+        
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Discount</th>
+                        <th>Usage Limit</th>
+                        <th>Used Count</th>
+                        <th>Created At</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for coupon in coupons %}
+                    <tr>
+                        <td>{{ coupon.code }}</td>
+                        <td>{{ coupon.discount }}%</td>
+                        <td>{{ coupon.usage_limit }}</td>
+                        <td>{{ coupon.used_count }}</td>
+                        <td>{{ coupon.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            <a href="#" class="btn btn-sm btn-primary">Edit</a>
+                            <a href="#" class="btn btn-sm btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <a href="{{ url_for('admin.create_coupon') }}" class="btn btn-primary mt-3">
+            <i class="bi bi-plus"></i> Create New Coupon
+        </a>
+    </div>
+</div>
+{% endblock %}
