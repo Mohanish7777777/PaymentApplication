@@ -13,8 +13,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the application code into the container
 COPY . .
 
-# Expose the port the app runs on (change if your app uses a different port)
-EXPOSE 5000
-
-# Run the application
-CMD ["python", "app.py"]
+# Set the command for Koyeb runtime (serve on port 80 by default)
+CMD ["gunicorn", "-b", "0.0.0.0:80", "app:app"]
